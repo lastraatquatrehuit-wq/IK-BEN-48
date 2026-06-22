@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Configuration de la page
-st.set_page_config(page_title="IA de Wanis", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="IA de Wanis", page_icon="", layout="centered")
 
 # Style CSS personnalisé pour rendre l'interface magnifique
 st.markdown("""
@@ -56,7 +56,8 @@ if mode == "Discussion principale":
             st.write(user_input)
 
         # Réponse automatique de test (on pourra la connecter à une vraie IA plus tard)
-        import google.generativeai as genai
+        import streamlit as st
+import google.generativeai as genai
 
 # 1. On connecte le cerveau
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
@@ -83,5 +84,4 @@ elif mode == "À propos":
     st.subheader("ℹ️ Informations")
     st.info("Cette application a été créée sur mesure pour Wanis et tourne localement sur le conteneur Linux du Chromebook.")
 
-import streamlit as st
-import google.generativeai as genai
+
