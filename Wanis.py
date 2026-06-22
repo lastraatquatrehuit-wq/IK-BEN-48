@@ -70,7 +70,8 @@ if user_input:
     # 3. On affiche la réponse de l'IA
     with st.chat_message("assistant"):
         st.write(reply)
-
+import streamlit as st
+import google.generativeai as genai
 
 elif mode == "Paramètres":
     st.subheader("⚙️ Panneau de contrôle")
