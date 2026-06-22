@@ -72,7 +72,6 @@ if user_input:
         st.write(reply)
 import streamlit as st
 import google.generativeai as genai
-
 elif mode == "Paramètres":
     st.subheader("⚙️ Panneau de contrôle")
     st.write("Modifie ici les options de ton application.")
