@@ -53,7 +53,7 @@ if mode == "Discussion principale":
         # Ajouter le message de l'utilisateur à l'historique
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.chat_message("user"):
-            st.write(user_input})
+            st.write(user_input)
 
         # Réponse automatique de test (on pourra la connecter à une vraie IA plus tard)
         reply = f"Reçu ! Tu as dit : '{user_input}'. Tout fonctionne parfaitement sur ton Chromebook !"
