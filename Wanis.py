@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Configuration de la page
-st.set_page_config(page_title="Application de Wanis", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="IA de Wanis", page_icon="🤖", layout="centered")
 
 # Style CSS personnalisé pour rendre l'interface magnifique
 st.markdown("""
@@ -23,7 +23,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Titre de l'application
-st.markdown('<div class="main-title">Application de Wanis 🤖</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"> IA de Wanis 🤖</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Bienvenue dans ton espace de discussion et de contrôle</div>', unsafe_allow_html=True)
 
 # Barre latérale (Sidebar) pour les options
@@ -56,10 +56,21 @@ if mode == "Discussion principale":
             st.write(user_input)
 
         # Réponse automatique de test (on pourra la connecter à une vraie IA plus tard)
-        reply = f"Reçu ! Tu as dit : '{user_input}'. Tout fonctionne parfaitement sur ton Chromebook !"
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-        with st.chat_message("assistant"):
-            st.write(reply)
+        import google.generativeai as genai
+
+# 1. On connecte le cerveau
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+model = genai.GenerativeModel('gemini-pro')
+
+# 2. Quand l'utilisateur écrit, on envoie le message à Google
+if user_input:
+    response = model.generate_content(user_input)
+    reply = response.text
+
+    # 3. On affiche la réponse de l'IA
+    with st.chat_message("assistant"):
+        st.write(reply)
+
 
 elif mode == "Paramètres":
     st.subheader("⚙️ Panneau de contrôle")
