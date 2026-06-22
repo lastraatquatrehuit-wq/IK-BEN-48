@@ -1,4 +1,4 @@
-mport streamlit as st
+import streamlit as st
 import google.generativeai as genai
 
 # 1. Configuration de l'IA (On utilise tes Secrets ici)
