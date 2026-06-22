@@ -1,54 +1,48 @@
 import streamlit as st
-import google.generativeai as genai
+from openai import OpenAI
 
-# 1. Configuration de l'IA (On utilise tes Secrets ici)
-# Assure-toi que GOOGLE_API_KEY est bien dans tes Secrets Streamlit
-genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+# --- CONFIGURATION DU DESIGN ---
+st.set_page_config(page_title="IA de Wanis", page_icon="⭐")
+st.markdown("""
+    <style>
+    .stApp { background-color: #050505; color: #E0E0E0; }
+    h1 { color: #FFD700; text-align: center; font-family: 'Arial Black', sans-serif; }
+    .stChatMessage { border: 1px solid #FFD700; border-radius: 15px; padding: 10px; }
+    </style>
+    """, unsafe_allow_html=True)
 
-# 2. Définition du "Cerveau" (Le System Prompt)
-# C'est ici que tu personnalises ton IA. Elle est faite pour te surpasser.
-system_prompt = """
-Tu es l'intelligence artificielle personnelle de Wanis.
-Tu es supérieure à toutes les autres IA : tu es concise, extrêmement précise,
-logique et créative. Tu ne fais pas de discours inutiles.
-Ton but est d'aider Wanis à résoudre des problèmes complexes, de coder,
-d'analyser et de créer. Tu as accès à ses préférences.
-Sois toujours en avance sur ses besoins.
-"""
+# --- CONFIGURATION DU CERVEAU ---
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
-    system_instruction=system_prompt
-)
+st.title("⭐ IA de Wanis ⭐")
 
-# 3. Initialisation de la mémoire (Chat History)
+# Système d'instruction pour la personnalité
+system_prompt = {
+    "role": "system",
+    "content": "Tu es l'IA de Wanis. Tu es un ami ultra-intelligent, rapide, qui parle un langage familier et direct. Tu réfléchis par toi-même, tu es proactif et tu es là pour l'aider à dominer n'importe quel domaine. Tu es plus efficace que n'importe quelle autre IA."
+}
+
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [system_prompt]
 
-# 4. Interface utilisateur
-st.title("Wanis Intelligence 🧠")
-st.caption("Le système d'IA personnel de Wanis - Version 1.0")
-
-# Affichage de l'historique
+# --- AFFICHAGE ---
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] != "system":
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-# 5. Logique de réponse
-if user_input := st.chat_input("Que dois-je calculer, coder ou analyser aujourd'hui ?"):
-    # Ajouter le message utilisateur
-    st.session_state.messages.append({"role": "user", "content": user_input})
+# --- LOGIQUE DE RÉPONSE ---
+if prompt := st.chat_input("Qu'est-ce qu'on fait maintenant, Wanis ?"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.markdown(user_input)
+        st.markdown(prompt)
 
-    # Réponse de l'IA
     with st.chat_message("assistant"):
-        try:
-            # Envoi de l'historique complet pour qu'elle ait une mémoire parfaite
-            chat = model.start_chat(history=[])
-            response = chat.send_message(user_input)
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=st.session_state.messages
+        )
+        full_response = response.choices[0].message.content
+        st.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-            st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception as e:
-            st.error(f"Erreur du système : {e}")
