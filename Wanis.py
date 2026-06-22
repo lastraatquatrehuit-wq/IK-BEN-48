@@ -70,8 +70,9 @@ if user_input:
     # 3. On affiche la réponse de l'IA
     with st.chat_message("assistant"):
         st.write(reply)
-import streamlit as st
-import google.generativeai as genai
+
+
+
 elif mode == "Paramètres":
     st.subheader("⚙️ Panneau de contrôle")
     st.write("Modifie ici les options de ton application.")
@@ -81,3 +82,6 @@ elif mode == "Paramètres":
 elif mode == "À propos":
     st.subheader("ℹ️ Informations")
     st.info("Cette application a été créée sur mesure pour Wanis et tourne localement sur le conteneur Linux du Chromebook.")
+
+import streamlit as st
+import google.generativeai as genai
